@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerLocomotionMoveState : PlayerBaseState
+public class PlayerLocomotionMoveState : PlayerGroundedState
 {
     public PlayerLocomotionMoveState(PlayerController player, PlayerStateMachine stateMachine) : base(player, stateMachine) { }
 
@@ -11,6 +11,7 @@ public class PlayerLocomotionMoveState : PlayerBaseState
 
     public override void LogicUpdate()
     {
+        base.LogicUpdate();
         if (player.MoveInput.magnitude < 0.1f)
         {
             stateMachine.ChangeState(player.LocoIdle);

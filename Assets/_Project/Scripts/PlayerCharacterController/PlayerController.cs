@@ -14,12 +14,12 @@ public class PlayerController : MonoBehaviour
     public bool isGrounded;
     public bool useFloating;   
     public bool lockMovement; 
+    public float lastJumpTime; // Вернул таймер прыжка
 
-    // === ПРОКСИ-СВОЙСТВА (Для совместимости со StateMachine) ===
-    // Твои стейты (LocoMove и т.д.) будут обращаться к этим свойствам как раньше,
-    // но данные теперь берутся из файла stats.
+    // === ПРОКСИ-СВОЙСТВА ===
     public float MoveSpeed => stats.moveSpeed;
     public float SprintSpeed => stats.sprintSpeed;
+    public float WalkingSpeed => stats.walkingSpeed; // Вернул для ходьбы
     public float Acceleration => stats.acceleration;
     public float RotationSpeed => stats.rotationSpeed;
     
@@ -30,9 +30,14 @@ public class PlayerController : MonoBehaviour
     public float RayLength => stats.rayLength;
     public LayerMask GroundLayer => stats.groundLayer;
 
+    // Прыжки
+    public float JumpHeight => stats.jumpHeight;
+    public float AirControl => stats.airControl;
+
     // === КОМПОНЕНТЫ ===
     public Rigidbody RB { get; private set; }
     public InputActions Input { get; private set; }
+    //public PlayerAnimationManager AnimationManager { get; private set; }
     
     // === STATE MACHINES ===
     public PlayerStateMachine LocomotionSM { get; private set; }
@@ -42,11 +47,16 @@ public class PlayerController : MonoBehaviour
     public PlayerLocomotionIdleState LocoIdle { get; private set; }
     public PlayerLocomotionMoveState LocoMove { get; private set; }
     public PlayerLocomotionSprintState LocoSprint { get; private set; }
+    public PlayerLocomotionJumpState LocoJump { get; private set; } // Вернул
+    public PlayerLocomotionAirState LocoAir { get; private set; }   // Вернул
     public PlayerActionNoneState ActionNone { get; private set; }
 
     // === INPUT ===
     public Vector2 MoveInput { get; private set; }
     public bool IsSprintingInput { get; private set; }
+    public bool JumpInput { get; private set; }
+    public bool IsWalking { get; private set; } // Вернул флаг ходьбы
+    public float MoveAmount => Mathf.Clamp01(MoveInput.magnitude); // Вернул для аналогового стика
 
     private void Awake()
     {
@@ -54,27 +64,44 @@ public class PlayerController : MonoBehaviour
         RB.freezeRotation = true; 
         RB.useGravity = true;
         RB.interpolation = RigidbodyInterpolation.Interpolate;
+        
+        //AnimationManager = GetComponent<PlayerAnimationManager>(); // Не забудь, что этот компонент должен висеть на объекте!
 
         if (cameraTransform == null && Camera.main != null) 
             cameraTransform = Camera.main.transform;
 
-        // Валидация: если забыл вставить Stats, ругаемся в консоль
         if (stats == null) 
             Debug.LogError("PLAYER CONTROLLER: Не назначен файл Stats (ScriptableObject)!");
 
         Input = new InputActions();
+        
+        // --- ДВИЖЕНИЕ ---
         Input.Player.Move.performed += ctx => MoveInput = ctx.ReadValue<Vector2>();
         Input.Player.Move.canceled += ctx => MoveInput = Vector2.zero;
 
-        Input.Player.DodgeSprint.performed += ctx => IsSprintingInput = true;
-        Input.Player.DodgeSprint.canceled += ctx => IsSprintingInput = false;
+        // --- СПРИНТ ---
+        Input.Player.Sprint.performed += ctx => IsSprintingInput = true;
+        Input.Player.Sprint.canceled += ctx => IsSprintingInput = false;
+        
+        // --- ПРЫЖОК ---
+        Input.Player.Jump.performed += ctx => JumpInput = true;
+        Input.Player.Jump.canceled += ctx => JumpInput = false;
+        
+        // --- ХОДЬБА (TOGGLE) ---
+        Input.Player.WalkToggle.performed += ctx => IsWalking = !IsWalking;
 
         LocomotionSM = new PlayerStateMachine();
         ActionSM = new PlayerStateMachine();
 
+        // === ИНИЦИАЛИЗАЦИЯ СТЕЙТОВ ===
         LocoIdle = new PlayerLocomotionIdleState(this, LocomotionSM);
         LocoMove = new PlayerLocomotionMoveState(this, LocomotionSM);
         LocoSprint = new PlayerLocomotionSprintState(this, LocomotionSM);
+        
+        // !!! ВОТ ЧЕГО НЕ ХВАТАЛО В ТВОЕМ СКРИПТЕ ВЫШЕ !!!
+        LocoJump = new PlayerLocomotionJumpState(this, LocomotionSM);
+        LocoAir = new PlayerLocomotionAirState(this, LocomotionSM);
+        
         ActionNone = new PlayerActionNoneState(this, ActionSM);
     }
 
@@ -91,6 +118,11 @@ public class PlayerController : MonoBehaviour
     {
         LocomotionSM.CurrentState.LogicUpdate();
         ActionSM.CurrentState.LogicUpdate();
+
+
+        // ВРЕМЕННЫЙ ДЕБАГ
+        if (JumpInput) Debug.Log("Кнопка нажата!");
+        if (JumpInput && isGrounded) Debug.Log("Готов к прыжку (Input + Ground)!");
     }
 
     private void FixedUpdate()
@@ -101,7 +133,12 @@ public class PlayerController : MonoBehaviour
         ActionSM.CurrentState.PhysicsUpdate();
         CheckGround();
 
-        if (useFloating) ApplyFloatingForce();
+        // ВАЖНО: Добавил проверку jumpCooldown.
+        // Без неё левитация включится мгновенно и не даст взлететь.
+        if (useFloating && Time.time > lastJumpTime + stats.jumpCooldown) 
+        {
+            ApplyFloatingForce();
+        }
     }
 
     public void HandleMovement(float targetSpeed)
@@ -121,12 +158,16 @@ public class PlayerController : MonoBehaviour
         {
             targetDirection.Normalize();
 
-            // Используем свойство-прокси RotationSpeed (которое берет из SO)
+            // Умный поворот
+            float angle = Vector3.Angle(transform.forward, targetDirection);
+            // Если угол большой - вращаемся быстрее (RotationSpeed * 2)
+            float currentRotSpeed = (angle > 90f) ? RotationSpeed * 2f : RotationSpeed;
+
             Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
             Quaternion nextRotation = Quaternion.RotateTowards(
                 transform.rotation, 
                 targetRotation, 
-                RotationSpeed * Time.fixedDeltaTime
+                currentRotSpeed * Time.fixedDeltaTime
             );
             RB.MoveRotation(nextRotation);
 
@@ -135,33 +176,31 @@ public class PlayerController : MonoBehaviour
             Vector3 velDiff = targetVel - currentVel;
             velDiff.y = 0; 
 
-            // Используем свойство Acceleration
             RB.AddForce(velDiff * Acceleration, ForceMode.Acceleration);
         }
         else
         {
+            // Торможение
             Vector3 currentVel = RB.linearVelocity;
             Vector3 antiSlide = new Vector3(-currentVel.x * 10f, 0, -currentVel.z * 10f); 
             RB.AddForce(antiSlide, ForceMode.Acceleration);
         }
     }
 
+    // Твоя версия физики (оставил без изменений, как ты просил)
     private void ApplyFloatingForce()
     {
-        // Используем RayLength из SO
         Vector3 rayOrigin = transform.position + Vector3.up; 
         if (Physics.Raycast(rayOrigin, Vector3.down, out RaycastHit hit, RayLength + 1f, GroundLayer))
         {
             float distanceToGround = hit.distance - 1f; 
             
-            // Используем RideHeight из SO
             float dir = RideHeight - distanceToGround;
             
             float rayDirVel = Vector3.Dot(Vector3.down, RB.linearVelocity);
             float otherDirVel = (hit.rigidbody != null) ? Vector3.Dot(Vector3.down, hit.rigidbody.linearVelocity) : 0f;
             float relVel = rayDirVel - otherDirVel;
 
-            // Используем RideSpringStrength и Damper из SO
             float force = (dir * RideSpringStrength) - (relVel * RideSpringDamper);
             
             RB.AddForce(Vector3.down * force);
@@ -170,21 +209,27 @@ public class PlayerController : MonoBehaviour
 
     private void CheckGround() 
     {
-        // Используем RayLength и GroundLayer из SO
         isGrounded = Physics.Raycast(transform.position + Vector3.up, Vector3.down, RayLength + 1f, GroundLayer);
     }
 
-    // === ФИЗИКА ТРЕНИЯ (Чтобы не скользил в Idle) ===
     public void ApplyFriction(float frictionAmount)
     {
-        // Если используешь Unity 6, то linearVelocity, если старую - velocity
         Vector3 vel = RB.linearVelocity; 
-        
-        // Гасим инерцию только по X и Z, высоту (Y) не трогаем
         RB.linearVelocity = new Vector3(
             vel.x * (1 - frictionAmount), 
             vel.y, 
             vel.z * (1 - frictionAmount)
         );
+    }
+
+    // Метод для прыжка
+    public void HandleJump()
+    {
+        lastJumpTime = Time.time;
+        float jumpVelocity = Mathf.Sqrt(JumpHeight * -2f * Physics.gravity.y);
+        
+        Vector3 playerVelocity = RB.linearVelocity;
+        playerVelocity.y = jumpVelocity;
+        RB.linearVelocity = playerVelocity;
     }
 }

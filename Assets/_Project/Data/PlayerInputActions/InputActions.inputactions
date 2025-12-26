@@ -34,9 +34,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "DodgeSprint",
+                    "name": "Sprint",
                     "type": "Button",
                     "id": "04198bad-716f-4eff-a99f-179e274ff8e8",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "WalkToggle",
+                    "type": "Button",
+                    "id": "cd8276db-ec52-43ac-b025-a110ad9cf240",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -158,10 +167,10 @@
                     "name": "",
                     "id": "7ec16a7e-8200-472a-b81d-f648cd994e09",
                     "path": "<Keyboard>/shift",
-                    "interactions": "Hold(pressPoint=0.3)",
+                    "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "DodgeSprint",
+                    "action": "Sprint",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -172,7 +181,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "DodgeSprint",
+                    "action": "Sprint",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bdca102b-e982-4df8-a4a7-eab1d1f5d73f",
+                    "path": "<Keyboard>/alt",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "WalkToggle",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
