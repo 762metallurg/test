@@ -125,7 +125,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""id"": ""04198bad-716f-4eff-a99f-179e274ff8e8"",
                     ""expectedControlType"": """",
                     ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Hold"",
                     ""initialStateCheck"": false
                 },
                 {
