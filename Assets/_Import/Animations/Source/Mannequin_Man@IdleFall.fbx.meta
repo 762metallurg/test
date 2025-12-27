@@ -1,12 +1,5 @@
 fileFormatVersion: 2
-guid: dae172041db961746b2bb6b2cae2b5f0
-AssetOrigin:
-  serializedVersion: 1
-  productId: 303269
-  packageName: 'GameDev Essential Kit - Mannequin [Free Edition]'
-  packageVersion: v1.0.0
-  assetPath: Assets/AssetHunts!/GameDev Essential Kit - Mannequin/Source File/Mannequin_Man.fbx
-  uploadId: 749409
+guid: 7ebd44a96a3577d4f87431d2d3d00d42
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -83,7 +76,7 @@ ModelImporter:
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
   referencedClips: []
-  importAnimation: 0
+  importAnimation: 1
   humanDescription:
     serializedVersion: 3
     human:
@@ -831,11 +824,11 @@ ModelImporter:
     hasTranslationDoF: 0
     hasExtraRoot: 1
     skeletonHasParents: 1
-  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: dae172041db961746b2bb6b2cae2b5f0, type: 3}
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 3
   humanoidOversampling: 1
-  avatarSetup: 1
+  avatarSetup: 2
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
   importBlendShapeDeformPercent: 1
   remapMaterialsIfMaterialImportModeIsNone: 0

@@ -49,12 +49,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -3756481566773535331, guid: dae172041db961746b2bb6b2cae2b5f0, type: 3}
-      propertyPath: m_Materials.Array.data[0]
+      propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 78cc3a5f80a4c8b489591d8996313d08, type: 2}
     - target: {fileID: 919132149155446097, guid: dae172041db961746b2bb6b2cae2b5f0, type: 3}
       propertyPath: m_Name
       value: Mannequin_Man
+      objectReference: {fileID: 0}
+    - target: {fileID: 5692363959232306509, guid: dae172041db961746b2bb6b2cae2b5f0, type: 3}
+      propertyPath: m_Name
+      value: Hips
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
