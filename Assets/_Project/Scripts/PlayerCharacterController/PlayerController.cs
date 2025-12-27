@@ -14,7 +14,10 @@ public class PlayerController : MonoBehaviour
     public bool isGrounded;
     public bool useFloating;   
     public bool lockMovement; 
+
+    [Header("--- State Flags ---")]
     public float lastJumpTime; // Вернул таймер прыжка
+    public float lastDodgeTime;
 
     // === ПРОКСИ-СВОЙСТВА ===
     public float MoveSpeed => stats.moveSpeed;
@@ -50,11 +53,13 @@ public class PlayerController : MonoBehaviour
     public PlayerLocomotionJumpState LocoJump { get; private set; } // Вернул
     public PlayerLocomotionAirState LocoAir { get; private set; }   // Вернул
     public PlayerActionNoneState ActionNone { get; private set; }
+    public PlayerLocomotionDodgeState LocoDodge { get; private set; }
 
     // === INPUT ===
     public Vector2 MoveInput { get; private set; }
     public bool IsSprintingInput { get; private set; }
     public bool JumpInput { get; private set; }
+    public bool DodgeInput { get; private set; }
     public bool IsWalking { get; private set; } // Вернул флаг ходьбы
     public float MoveAmount => Mathf.Clamp01(MoveInput.magnitude); // Вернул для аналогового стика
 
@@ -88,7 +93,22 @@ public class PlayerController : MonoBehaviour
         Input.Player.Jump.canceled += ctx => JumpInput = false;
         
         // --- ХОДЬБА (TOGGLE) ---
-        Input.Player.WalkToggle.performed += ctx => IsWalking = !IsWalking;
+        Input.Player.WalkToggle.performed += ctx => {
+            // Выполняем код, только если кнопка НАЖАТА (true), игнорируем отпускание
+            if (ctx.ReadValueAsButton()) 
+            {
+                IsWalking = !IsWalking;
+                Debug.Log($"[INPUT] WalkToggle: {IsWalking}");
+            }
+        };
+
+        Input.Player.Dodge.performed += ctx => DodgeInput = true;
+        Input.Player.Dodge.canceled += ctx => DodgeInput = false;
+
+        // ... создание стейтов ...
+        LocoJump = new PlayerLocomotionJumpState(this, LocomotionSM);
+        LocoAir = new PlayerLocomotionAirState(this, LocomotionSM);
+        LocoDodge = new PlayerLocomotionDodgeState(this, LocomotionSM);
 
         LocomotionSM = new PlayerStateMachine();
         ActionSM = new PlayerStateMachine();

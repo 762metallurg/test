@@ -15,6 +15,14 @@ public class PlayerGroundedState : PlayerBaseState
             return; 
         }
 
+        // 2. РЫВОК (DODGE) --- НОВОЕ ---
+    // Проверяем ввод + прошел ли кулдаун
+        if (player.DodgeInput && Time.time > player.lastDodgeTime + player.stats.dodgeCooldown)
+        {
+            stateMachine.ChangeState(player.LocoDodge);
+            return;
+        }
+
         if (!player.isGrounded)
         {
             stateMachine.ChangeState(player.LocoAir);

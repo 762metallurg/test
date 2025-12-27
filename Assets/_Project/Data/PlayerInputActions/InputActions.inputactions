@@ -50,6 +50,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Dodge",
+                    "type": "Button",
+                    "id": "939af14a-df83-4d2e-a5b9-837002b57812",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -188,11 +197,22 @@
                 {
                     "name": "",
                     "id": "bdca102b-e982-4df8-a4a7-eab1d1f5d73f",
+                    "path": "<Keyboard>/ctrl",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "WalkToggle",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2d0b437e-473f-4e66-971f-095d88e2b049",
                     "path": "<Keyboard>/alt",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "WalkToggle",
+                    "action": "Dodge",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -21,4 +21,8 @@ public class PlayerLocomotionDataSO : ScriptableObject
     public float jumpHeight = 2f;
     public float airControl = 0.8f;
     public float jumpCooldown = 0.2f;
+    [Header("--- Dodge Stats ---")]
+    public float dodgeSpeed = 15f;    // Скорость рывка
+    public float dodgeTime = 0.4f;    // Длительность рывка (сек)
+    public float dodgeCooldown = 0.5f;// Чтобы не спамить
 }
