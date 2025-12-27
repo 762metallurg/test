@@ -73,7 +73,7 @@ namespace MovementSystem
             base.AddInputActionsCallbacks();
 
             StateMachine.Player.Input.PlayerActions.Sprint.performed += OnSprintPerformed;
-            // !!! ВАЖНО: Подписываемся на отпускание кнопки !!!
+            // ДОБАВИТЬ ЭТУ СТРОКУ:
             StateMachine.Player.Input.PlayerActions.Sprint.canceled += OnSprintCanceled; 
         }
 

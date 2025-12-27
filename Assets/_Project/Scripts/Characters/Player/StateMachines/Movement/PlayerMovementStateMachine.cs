@@ -6,7 +6,6 @@ namespace MovementSystem
         public PlayerStateReusableData ReusableData { get; }
 
         public PlayerIdlingState IdlingState { get; }
-        public PlayerDashingState DashingState { get; }
 
         public PlayerWalkingState WalkingState { get; }
         public PlayerRunningState RunningState { get; }
@@ -29,7 +28,6 @@ namespace MovementSystem
             ReusableData = new PlayerStateReusableData();
 
             IdlingState = new PlayerIdlingState(this);
-            DashingState = new PlayerDashingState(this);
 
             WalkingState = new PlayerWalkingState(this);
             RunningState = new PlayerRunningState(this);

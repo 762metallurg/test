@@ -98,8 +98,6 @@ namespace MovementSystem
         {
             base.AddInputActionsCallbacks();
 
-            StateMachine.Player.Input.PlayerActions.Dash.started += OnDashStarted;
-
             StateMachine.Player.Input.PlayerActions.Jump.started += OnJumpStarted;
         }
 
@@ -107,14 +105,7 @@ namespace MovementSystem
         {
             base.RemoveInputActionsCallbacks();
 
-            StateMachine.Player.Input.PlayerActions.Dash.started -= OnDashStarted;
-
             StateMachine.Player.Input.PlayerActions.Jump.started -= OnJumpStarted;
-        }
-
-        protected virtual void OnDashStarted(InputAction.CallbackContext context)
-        {
-            StateMachine.ChangeState(StateMachine.DashingState);
         }
 
         protected virtual void OnJumpStarted(InputAction.CallbackContext context)
