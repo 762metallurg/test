@@ -70,7 +70,7 @@ public class PlayerController : MonoBehaviour
         RB.useGravity = true;
         RB.interpolation = RigidbodyInterpolation.Interpolate;
         
-        //AnimationManager = GetComponent<PlayerAnimationManager>(); // Не забудь, что этот компонент должен висеть на объекте!
+        //AnimationManager = GetComponent<PlayerAnimationManager>();
 
         if (cameraTransform == null && Camera.main != null) 
             cameraTransform = Camera.main.transform;
@@ -80,48 +80,41 @@ public class PlayerController : MonoBehaviour
 
         Input = new InputActions();
         
-        // --- ДВИЖЕНИЕ ---
+        // --- ПОДПИСКИ НА INPUT ---
         Input.Player.Move.performed += ctx => MoveInput = ctx.ReadValue<Vector2>();
         Input.Player.Move.canceled += ctx => MoveInput = Vector2.zero;
 
-        // --- СПРИНТ ---
         Input.Player.Sprint.performed += ctx => IsSprintingInput = true;
         Input.Player.Sprint.canceled += ctx => IsSprintingInput = false;
         
-        // --- ПРЫЖОК ---
         Input.Player.Jump.performed += ctx => JumpInput = true;
         Input.Player.Jump.canceled += ctx => JumpInput = false;
         
-        // --- ХОДЬБА (TOGGLE) ---
-        Input.Player.WalkToggle.performed += ctx => {
-            // Выполняем код, только если кнопка НАЖАТА (true), игнорируем отпускание
-            if (ctx.ReadValueAsButton()) 
-            {
-                IsWalking = !IsWalking;
-                Debug.Log($"[INPUT] WalkToggle: {IsWalking}");
-            }
-        };
+        // Walk Toggle (Interactions: Press Only или через код)
+        Input.Player.WalkToggle.performed += ctx => IsWalking = !IsWalking;
 
+        // Dodge
         Input.Player.Dodge.performed += ctx => DodgeInput = true;
         Input.Player.Dodge.canceled += ctx => DodgeInput = false;
-
-        // ... создание стейтов ...
-        LocoJump = new PlayerLocomotionJumpState(this, LocomotionSM);
-        LocoAir = new PlayerLocomotionAirState(this, LocomotionSM);
-        LocoDodge = new PlayerLocomotionDodgeState(this, LocomotionSM);
 
         LocomotionSM = new PlayerStateMachine();
         ActionSM = new PlayerStateMachine();
 
-        // === ИНИЦИАЛИЗАЦИЯ СТЕЙТОВ ===
+        // === ИНИЦИАЛИЗАЦИЯ ВСЕХ СОСТОЯНИЙ (ПРОВЕРЬ ЭТОТ БЛОК!) ===
+        
+        // 1. Базовые (ты мог их случайно удалить)
         LocoIdle = new PlayerLocomotionIdleState(this, LocomotionSM);
         LocoMove = new PlayerLocomotionMoveState(this, LocomotionSM);
         LocoSprint = new PlayerLocomotionSprintState(this, LocomotionSM);
         
-        // !!! ВОТ ЧЕГО НЕ ХВАТАЛО В ТВОЕМ СКРИПТЕ ВЫШЕ !!!
+        // 2. Воздушные
         LocoJump = new PlayerLocomotionJumpState(this, LocomotionSM);
         LocoAir = new PlayerLocomotionAirState(this, LocomotionSM);
         
+        // 3. Додж
+        LocoDodge = new PlayerLocomotionDodgeState(this, LocomotionSM);
+        
+        // 4. Экшен (пока пустышка)
         ActionNone = new PlayerActionNoneState(this, ActionSM);
     }
 
