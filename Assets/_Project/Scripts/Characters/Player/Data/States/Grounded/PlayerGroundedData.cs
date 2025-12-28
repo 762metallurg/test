@@ -20,6 +20,5 @@ namespace MovementSystem
         [field: SerializeField] public PlayerSprintData SprintData { get; private set; }
         [field: SerializeField] public PlayerStopData StopData { get; private set; }
         [field: SerializeField] public PlayerRollData RollData { get; private set; }
-        [field: SerializeField] public PlayerAttackingData AttackingData { get; private set; }
     }
 }

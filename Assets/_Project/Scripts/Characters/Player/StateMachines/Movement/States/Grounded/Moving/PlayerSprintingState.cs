@@ -32,6 +32,7 @@ namespace MovementSystem
             {
                 _keepSprinting = false;
             }
+            Debug.Log("Entered Sprinting State");
         }
 
         public override void Exit()
@@ -46,6 +47,7 @@ namespace MovementSystem
 
                 StateMachine.ReusableData.ShouldSprint = false;
             }
+            Debug.Log("Exited Sprinting State");
         }
 
         public override void Update()
@@ -80,7 +82,7 @@ namespace MovementSystem
         protected override void AddInputActionsCallbacks()
         {
             base.AddInputActionsCallbacks();
-
+            Debug.Log("Adding Sprint Callback");
             StateMachine.Player.Input.PlayerActions.Sprint.performed += OnSprintPerformed;
         }
 
@@ -94,14 +96,14 @@ namespace MovementSystem
         private void OnSprintPerformed(InputAction.CallbackContext context)
         {
             _keepSprinting = true;
-
+            Debug.Log("Sprinting Performed");
             StateMachine.ReusableData.ShouldSprint = true;
         }
 
         protected override void OnMovementCanceled(InputAction.CallbackContext context)
         {
             StateMachine.ChangeState(StateMachine.HardStoppingState);
-
+            Debug.Log("Movement Canceled in Sprinting State");
             base.OnMovementCanceled(context);
         }
 

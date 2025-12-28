@@ -117,6 +117,7 @@ namespace MovementSystem
         {
             if (StateMachine.ReusableData.ShouldSprint)
             {
+                Debug.Log("Continuing to Sprint");
                 StateMachine.ChangeState(StateMachine.SprintingState);
 
                 return;

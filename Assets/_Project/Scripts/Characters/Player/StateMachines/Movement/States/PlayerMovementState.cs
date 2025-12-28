@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -118,7 +120,7 @@ namespace MovementSystem
             StateMachine.Player.Input.PlayerActions.WalkToggle.started += OnWalkToggleStarted;
 
             StateMachine.Player.Input.PlayerActions.Look.started += OnMouseMovementStarted;
-
+            StateMachine.Player.Input.PlayerActions.Sprint.started += OnSprintStarted;
             StateMachine.Player.Input.PlayerActions.Move.performed += OnMovementPerformed;
             StateMachine.Player.Input.PlayerActions.Move.canceled += OnMovementCanceled;
         }
@@ -128,10 +130,23 @@ namespace MovementSystem
             StateMachine.Player.Input.PlayerActions.WalkToggle.started -= OnWalkToggleStarted;
 
             StateMachine.Player.Input.PlayerActions.Look.started -= OnMouseMovementStarted;
-            
+            StateMachine.Player.Input.PlayerActions.Sprint.canceled -= OnSprintStarted;
             StateMachine.Player.Input.PlayerActions.Move.performed -= OnMovementPerformed;
             StateMachine.Player.Input.PlayerActions.Move.canceled -= OnMovementCanceled;
         }
+
+        private void OnSprintStarted(InputAction.CallbackContext context)
+        {
+            if (StateMachine.ReusableData.MovementInput == Vector2.zero)
+            {
+                StateMachine.ChangeState(StateMachine.HardStoppingState);
+
+                return;
+            }
+
+            StateMachine.ChangeState(StateMachine.SprintingState);
+        }
+
 
         protected virtual void OnWalkToggleStarted(InputAction.CallbackContext context)
         {
