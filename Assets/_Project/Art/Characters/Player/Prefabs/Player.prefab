@@ -159,9 +159,6 @@ GameObject:
   - component: {fileID: 4614519791241904094}
   - component: {fileID: 1997175717916360482}
   - component: {fileID: 8421830912267587221}
-  - component: {fileID: 3183799821924766233}
-  - component: {fileID: 4252987546369814000}
-  - component: {fileID: 755189365282993205}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -234,80 +231,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.2
-  m_Height: 1.3499999
+  m_Height: 1.8
   m_Direction: 1
-  m_Center: {x: 0, y: 1.125, z: 0}
---- !u!114 &3183799821924766233
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8563899768273147919}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aaa4fc31561d9a54ba8798c6b5057c2a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &4252987546369814000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8563899768273147919}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a0ac739ae986c41bb949ce4bc2039b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <DefaultColliderData>k__BackingField:
-    <Height>k__BackingField: 1.8
-    <CenterY>k__BackingField: 0.9
-    <Radius>k__BackingField: 0.2
-  <SlopeData>k__BackingField:
-    <StepHeightPercentage>k__BackingField: 0.25
-    <FloatRayDistance>k__BackingField: 2
-    <StepReachForce>k__BackingField: 25
-  <TriggerColliderData>k__BackingField:
-    <GroundCheckCollider>k__BackingField: {fileID: 3382208952948716762}
---- !u!114 &755189365282993205
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8563899768273147919}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9af045182270e24c9d4fe5e0b45c533, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <Data>k__BackingField: {fileID: 11400000, guid: 8abb7b47fbbb7ff499b61b49c7131b51, type: 2}
-  <LayerData>k__BackingField:
-    <GroundLayer>k__BackingField:
-      serializedVersion: 2
-      m_Bits: 64
-  <CameraRecenteringUtility>k__BackingField:
-    <VirtualCamera>k__BackingField: {fileID: 0}
-    <DefaultHorizontalWaitTime>k__BackingField: 0
-    <DefaultHorizontalRecenteringTime>k__BackingField: 4
-  <AnimationData>k__BackingField:
-    _groundedParameterName: IsGrounded
-    _movingParameterName: IsMoving
-    _stoppingParameterName: IsStopping
-    _landingParameterName: IsLanding
-    _airborneParameterName: IsAirborne
-    _idleParameterName: IsIdling
-    _dashParameterName: IsDashing
-    _walkParameterName: IsWalking
-    _runParameterName: IsRunning
-    _sprintParameterName: IsSprinting
-    _mediumStopParameterName: IsMediumStopping
-    _hardStopParameterName: IsHardStopping
-    _rollParameterName: IsRolling
-    _hardLandParameterName: IsHardLanding
-    _fallParameterName: IsFalling
+  m_Center: {x: 0, y: 0.9, z: 0}
 --- !u!1001 &3706453316246006653
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -623,9 +549,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5427129120885339462, guid: dcf2dd140097ea041ba8b70d12fa4df9, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3338327223264223026}
-    - targetCorrespondingSourceObject: {fileID: 5427129120885339462, guid: dcf2dd140097ea041ba8b70d12fa4df9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1662406759183069075}
   m_SourcePrefab: {fileID: 100100000, guid: dcf2dd140097ea041ba8b70d12fa4df9, type: 3}
 --- !u!4 &8319606626194900097 stripped
 Transform:
@@ -659,16 +582,3 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1662406759183069075
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8664642598073605691}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93b7e06289d9cdd4bb8002bfccff3666, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _player: {fileID: 755189365282993205}
